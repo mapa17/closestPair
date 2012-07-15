@@ -1,5 +1,5 @@
 closestPair - Sequencial and Distributed closest Pair Algorithm
-##################################################
+===============================================================
 15.7.2012
 
 Both programs will generate randomly a number of points in a two dimensional plane,
@@ -16,23 +16,24 @@ A description of the distributed algorithm implemented can be found at
 OpenMPI is used as a framework to implemented the distributed algorithm.
 
 Dependencies
-############
+------------
 
 OpenMPI tools ( Debian/Ubuntu use sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev )
 
--- Compilation
-###########
+Compilation
+------------
 
-- MPI Version
+* MPI Version
 mpicc closestPair_mpi.c closestPair_tools.c -o cp_mpi
 
-- Sequencial Version
+* Sequencial Version
 mpicc closestPair_sequencial.c closestPair_tools.c -o cp_seq
 
 
 Execution
-#########
-- Run MPI version on two nodes with 100 Points
+---------
+
+* Run MPI version on two nodes with 100 Points
 mpirun -n 2 cp_mpi 100
 
 Author: Pasieka Manuel , mapa17@posgrado.upv.es
