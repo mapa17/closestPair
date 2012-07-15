@@ -20,13 +20,13 @@ Dependencies
 
 OpenMPI tools ( Debian/Ubuntu use sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev )
 
-Compilation
+-- Compilation
 ###########
 
--MPI Version
+- MPI Version
 mpicc closestPair_mpi.c closestPair_tools.c -o cp_mpi
 
--Sequencial Version
+- Sequencial Version
 mpicc closestPair_sequencial.c closestPair_tools.c -o cp_seq
 
 
