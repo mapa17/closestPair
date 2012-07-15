@@ -24,9 +24,11 @@ Compilation
 ------------
 
 * MPI Version
+
 mpicc closestPair_mpi.c closestPair_tools.c -o cp_mpi
 
 * Sequencial Version
+
 mpicc closestPair_sequencial.c closestPair_tools.c -o cp_seq
 
 
@@ -34,6 +36,11 @@ Execution
 ---------
 
 * Run MPI version on two nodes with 100 Points
+
 mpirun -n 2 cp_mpi 100
+
+
+Blame
+-----
 
 Author: Pasieka Manuel , mapa17@posgrado.upv.es
