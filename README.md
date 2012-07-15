@@ -37,7 +37,10 @@ Execution
 
 * Run MPI version on two nodes with 100 Points
 
-mpirun -n 2 cp_mpi 100
+mpirun -n 2 cp_mpi 100 <Seed Value>
+
+* Run sequencial version with 100 Points
+./cp_seq 100 <Seed Value>
 
 
 Blame

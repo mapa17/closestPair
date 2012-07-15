@@ -61,6 +61,8 @@ int cmpPoint_y(const void *a, const void *b) {
 
 void mpiInit(int argc, char** argv)
 {
+	int result;
+
 	MPI_Init(&argc, &argv);
 
 	//Create PointType
@@ -74,13 +76,14 @@ void mpiInit(int argc, char** argv)
     MPI_Type_commit(&PointType);
 
     //Create DistanceType
-    MPI_Datatype type2[3] = { MPI_DOUBLE, PointType, PointType };
+    MPI_Datatype type2[3] = { PointType, PointType, MPI_DOUBLE };
     int blocklen2[3] = { 1, 1, 1 };
     MPI_Aint disp2[3];
     distance Distance;
-    disp[0] = (void*)&Distance.d - (void*)&Distance;
-    disp[1] = (void*)&Distance.a - (void*)&Distance;
-    disp[2] = (void*)&Distance.b - (void*)&Distance;
+    disp2[0] = (void*)&Distance.a - (void*)&Distance;
+    disp2[1] = (void*)&Distance.b - (void*)&Distance;
+    disp2[2] = (void*)&Distance.d - (void*)&Distance;
+    //printf("DistanceDisplace [%d , %d, %d]\n", disp[0], disp[1], disp[2]);
     MPI_Type_create_struct(3, blocklen2, disp2, type2, &DistanceType);
     MPI_Type_commit(&DistanceType);
 }
@@ -146,4 +149,29 @@ char prepareMPIComm(void)
 	MPI_Comm_size( mpi_comm, &mpi_size );
 	MPI_Comm_rank( mpi_comm, &mpi_id );
 	return activeNode;
+}
+
+void trivalSearch(long np, point* points, distance* solution)
+{
+	long i,j;
+	long t1;
+	point* a;
+	point* b;
+
+	solution->d = 1.0;
+
+	for(i = 0; i < np; i++){
+		a = &points[i];
+		for(j = i+1; j<np; j++){
+			b = &(points[j]);
+			if( (eqal(*a, *b) == 0) && ( dist(*a, *b) < solution->d) ){
+				solution->d = dist(*a, *b);
+				solution->a = *a;
+				solution->b = *b;
+			}
+		}
+	}
+
+	solution->d = sqrt(solution->d);
+	//Solution should be set
 }

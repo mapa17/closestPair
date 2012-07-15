@@ -13,10 +13,14 @@
 
 #include "closestPair_tools.h"
 
+//#define DEBUG_HIGH
+
 void inputCheck(int argc, char** argv);
 void printUsage(int argc, char** argv);
 char generatePoints(long np, point** points);
 void trivalSearch(long np, point* points, distance* solution);
+
+int randInit;
 
 int main(int argc, char** argv)
 {
@@ -69,6 +73,22 @@ void inputCheck(int argc, char** argv)
 		printf("Invalid number of points! Number of points must be bigger than zero.\n");
 		exit(EXIT_FAILURE);
 	}
+
+	//Check for second argument being the random init value
+	if(argc == 3)
+	{
+		errno = 0; // To distinguish success/failure after call
+		randInit = atol(argv[2]);
+
+		/* Check for various possible errors */
+
+		if ((errno == ERANGE && (np == LONG_MAX || np == LONG_MIN)) || (errno != 0 && np == 0)) {
+		   perror("atol");
+		   exit(EXIT_FAILURE);
+		}
+	} else {
+		randInit = -1;
+	}
 }
 
 void printUsage(int argc, char** argv){
@@ -91,13 +111,18 @@ char generatePoints(long np, point** points)
 		return(EXIT_FAILURE);
 	}
 
-	t1 = time( NULL );
-	t2 = gmtime(&t1);
-	sec = t2->tm_sec;
-	equals = 0;
-	//printf("Seed [%d]\n", sec);
+	if(randInit < 0)
+	{
+		t1 = time( NULL );
+		t2 = gmtime(&t1);
+		sec = t2->tm_sec;
 
-	 srand(sec);
+		srand(sec);
+	} else {
+		printf("Using random init [%d]\n", randInit);
+		srand(randInit);
+	}
+	equals = 0;
 	 for(i = 0; i < np; i++){
 		 (*points)[i].x = (float) rand() / RAND_MAX;
 		 (*points)[i].y = (float) rand() / RAND_MAX;
@@ -114,33 +139,18 @@ char generatePoints(long np, point** points)
 		 }
 	 }
 
+	 //Sort points by their x value
+	 qsort(*points, np, sizeof(point), cmpPoint_x);
+
 	 printf("Eliminated %ld equal points.\n", equals);
 
+#ifdef DEBUG_HIGH
+	 printf("--- Generated Points ---\n");
+	 for(i=0; i < np; i++){
+		 printf("[%g, %g]\n", (*points)[i].x, (*points)[i].y );
+	 }
+	 printf("--- END ---\n");
+#endif
+
 	 return(EXIT_SUCCESS);
-}
-
-
-void trivalSearch(long np, point* points, distance* solution)
-{
-	long i,j;
-	long t1;
-	point* a;
-	point* b;
-
-	solution->d = 1.0;
-
-	for(i = 0; i < np; i++){
-		a = &points[i];
-		for(j = i+1; j<np; j++){
-			b = &(points[j]);
-			if( (eqal(*a, *b) == 0) && ( dist(*a, *b) < solution->d) ){
-				solution->d = dist(*a, *b);
-				solution->a = *a;
-				solution->b = *b;
-			}
-		}
-	}
-
-
-	//Solution should be set
 }

@@ -12,7 +12,7 @@
 
 //Types
 typedef struct { float x; float y; } point;
-typedef struct { double d; point a; point b; } distance;
+typedef struct { point a; point b; double d; } distance;
 extern MPI_Datatype PointType;
 extern MPI_Datatype DistanceType;
 
@@ -33,6 +33,7 @@ int cmpPoint_x(const void *a, const void *b);
 int cmpPoint_y(const void *a, const void *b);
 void mpiInit(int argc, char** argv);
 char prepareMPIComm(void);
+void trivalSearch(long np, point* points, distance* solution);
 
 void tick(void);
 double tack(void);
